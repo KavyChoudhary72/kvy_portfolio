@@ -175,6 +175,7 @@ function BioluminescentTimeline() {
 // 3D Neon bracket structures surrounding contact UI elements
 function BioluminescentBrackets() {
   const meshRef = useRef();
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   useFrame((state) => {
     const globalProgress = scrollState.progress;
@@ -191,13 +192,13 @@ function BioluminescentBrackets() {
     <group ref={meshRef} position={[0, -12, 1]}>
       {/* Decorative neon background ring */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[4.2, 4.25, 32]} />
+        <ringGeometry args={[isMobile ? 2.5 : 4.2, isMobile ? 2.53 : 4.25, 32]} />
         <meshBasicMaterial color="#10b981" transparent opacity={0.15} side={THREE.DoubleSide} />
       </mesh>
       
       {/* Waveform track ticks around the circle */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[4.4, 4.5, 8, 1]} />
+        <ringGeometry args={[isMobile ? 2.6 : 4.4, isMobile ? 2.7 : 4.5, 8, 1]} />
         <meshBasicMaterial color="#00d2ff" transparent opacity={0.1} wireframe side={THREE.DoubleSide} />
       </mesh>
     </group>
@@ -345,42 +346,45 @@ function Seahorse({ position, scale, color, emissive, speedOffset }) {
 
 // A family/group of colorful glowing Seahorses floating together in the abyssal layer
 function GlowingSeahorses() {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const xMultiplier = isMobile ? 0.5 : 1.0;
+
   const seahorses = useMemo(() => {
     return [
       {
         id: 1,
-        position: [-2.0, -11.5, -1.0],
-        scale: [0.85, 0.85, 0.85],
+        position: [-2.0 * xMultiplier, -11.5, -1.0],
+        scale: isMobile ? [0.6, 0.6, 0.6] : [0.85, 0.85, 0.85],
         color: '#ff70a6', // Glowing hot pink
         emissive: '#800830',
         speedOffset: 0,
       },
       {
         id: 2,
-        position: [2.2, -10.8, -1.5],
-        scale: [1.0, 1.0, 1.0],
+        position: [2.2 * xMultiplier, -10.8, -1.5],
+        scale: isMobile ? [0.7, 0.7, 0.7] : [1.0, 1.0, 1.0],
         color: '#00ffd2', // Glowing mint cyan
         emissive: '#005f50',
         speedOffset: 2.3,
       },
       {
         id: 3,
-        position: [-0.3, -13.0, -2.0],
-        scale: [0.75, 0.75, 0.75],
+        position: [-0.3 * xMultiplier, -13.0, -2.0],
+        scale: isMobile ? [0.55, 0.55, 0.55] : [0.75, 0.75, 0.75],
         color: '#ffd166', // Glowing neon gold
         emissive: '#7d5000',
         speedOffset: 4.6,
       },
       {
         id: 4,
-        position: [3.4, -13.5, -1.2],
-        scale: [0.8, 0.8, 0.8],
+        position: [3.4 * xMultiplier, -13.5, -1.2],
+        scale: isMobile ? [0.6, 0.6, 0.6] : [0.8, 0.8, 0.8],
         color: '#a29bfe', // Glowing lavender
         emissive: '#3d1680',
         speedOffset: 1.5,
       }
     ];
-  }, []);
+  }, [xMultiplier, isMobile]);
 
   return (
     <group>
@@ -400,32 +404,34 @@ function GlowingSeahorses() {
 
 // 3D Glassmorphic Floating interface cards with internal glowing timeline tracks
 function FloatingInterfaceCards() {
-  const cardCount = 3;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const xMultiplier = isMobile ? 0.5 : 1.0;
+
   const cards = useMemo(() => {
     return [
       {
         id: 1,
-        position: [-3.8, -11.5, -1.8],
+        position: [-3.8 * xMultiplier, -11.5, -1.8],
         rotation: [0.08, 0.35, -0.04],
-        scale: [1.9, 1.15, 1],
+        scale: isMobile ? [1.3, 0.8, 1] : [1.9, 1.15, 1],
         color: '#00d2ff',
       },
       {
         id: 2,
-        position: [4.0, -13.0, -2.2],
+        position: [4.0 * xMultiplier, -13.0, -2.2],
         rotation: [-0.12, -0.25, 0.08],
-        scale: [1.7, 1.05, 1],
+        scale: isMobile ? [1.2, 0.75, 1] : [1.7, 1.05, 1],
         color: '#10b981',
       },
       {
         id: 3,
-        position: [-2.2, -14.0, -2.4],
+        position: [-2.2 * xMultiplier, -14.0, -2.4],
         rotation: [0.04, 0.22, 0.04],
-        scale: [1.6, 0.95, 1],
+        scale: isMobile ? [1.1, 0.65, 1] : [1.6, 0.95, 1],
         color: '#8b5cf6',
       }
     ];
-  }, []);
+  }, [xMultiplier, isMobile]);
 
   const groupRef = useRef();
 
