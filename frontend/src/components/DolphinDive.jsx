@@ -271,16 +271,19 @@ export default function DolphinDive() {
   const groupRef = useRef();
   const dolphinRef = useRef();
   
-  // Splash locations
-  const exitSplashPos = [-4, -0.8, 0.5];
-  const entrySplashPos = [4, -0.8, 0.5];
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const xMultiplier = isMobile ? 0.5 : 1.0;
 
-  const cards = [
-    { url: '/assets/images/book_frontpage.png', pos: [-2.5, 1.2, 0.5] },
-    { url: '/assets/images/infographics.png', pos: [-0.8, 1.8, 1.0] },
-    { url: '/assets/images/pamplete.png', pos: [0.9, 1.6, 0.8] },
-    { url: '/assets/images/Thumbnail.png', pos: [2.5, 1.0, 0.2] }
-  ];
+  // Splash locations
+  const exitSplashPos = [-4 * xMultiplier, -0.8, 0.5];
+  const entrySplashPos = [4 * xMultiplier, -0.8, 0.5];
+
+  const cards = useMemo(() => [
+    { url: '/assets/images/book_frontpage.png', pos: [-2.5 * xMultiplier, 1.2, 0.5] },
+    { url: '/assets/images/infographics.png', pos: [-0.8 * xMultiplier, 1.8, 1.0] },
+    { url: '/assets/images/pamplete.png', pos: [0.9 * xMultiplier, 1.6, 0.8] },
+    { url: '/assets/images/Thumbnail.png', pos: [2.5 * xMultiplier, 1.0, 0.2] }
+  ], [xMultiplier]);
 
   useFrame(() => {
     // Hide entire scene when scrolled past it
@@ -296,11 +299,11 @@ export default function DolphinDive() {
       
       {/* Real animated GLTF fish/dolphin model */}
       <RealFish dolphinRef={dolphinRef} />
-
+  
       {/* Particle splashes */}
       <ParticleSplash type="exit" position={exitSplashPos} />
       <ParticleSplash type="entry" position={entrySplashPos} />
-
+  
       {/* Floating Design Cards */}
       {cards.map((card, idx) => (
         <DesignCard 
