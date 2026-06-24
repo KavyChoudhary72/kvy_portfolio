@@ -14,7 +14,7 @@ export default function PortfolioContent({ onOpenProject }) {
       submitBtn.innerText = 'Initializing Wave...';
       submitBtn.disabled = true;
 
-      const response = await fetch('/api/contact', {
+      const response = await fetch('https://kvy-portfolio-backend.onrender.com/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
