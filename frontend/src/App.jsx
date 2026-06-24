@@ -40,107 +40,34 @@ function ProjectModal({ project, onClose }) {
   if (!project) return null;
 
   return (
-    <div className="modal-backdrop" onClick={onClose} style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      backgroundColor: 'rgba(2, 4, 12, 0.92)',
-      backdropFilter: 'blur(16px)',
-      WebkitBackdropFilter: 'blur(16px)',
-      zIndex: 10000,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '2rem',
-      cursor: 'pointer'
-    }}>
+    <div className="modal-backdrop" onClick={onClose}>
       {/* Modal Close Button */}
-      <button onClick={onClose} style={{
-        position: 'absolute',
-        top: '2rem',
-        right: '2rem',
-        background: 'none',
-        border: 'none',
-        color: '#ffffff',
-        fontSize: '2.5rem',
-        cursor: 'pointer',
-        transition: 'color 0.2s',
-      }} className="close-modal-btn">✕</button>
+      <button onClick={onClose} className="close-modal-btn">✕</button>
 
       {/* Modal Card Content Container */}
-      <div className="modal-content-card" onClick={e => e.stopPropagation()} style={{
-        maxWidth: '1000px',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '1.5rem',
-        cursor: 'default',
-        textAlign: 'center'
-      }}>
-        <span style={{
-          fontFamily: 'Syncopate, sans-serif',
-          fontSize: '0.8rem',
-          color: '#00d2ff',
-          letterSpacing: '0.3em',
-          textTransform: 'uppercase'
-        }}>{project.tag}</span>
-        
-        <h2 style={{
-          fontFamily: 'Outfit, sans-serif',
-          fontSize: '2.5rem',
-          fontWeight: 900,
-          textTransform: 'uppercase',
-          margin: 0,
-          color: '#ffffff'
-        }}>{project.title}</h2>
+      <div className="modal-content-card" onClick={e => e.stopPropagation()}>
+        <span className="modal-project-tag">{project.tag}</span>
+        <h2 className="modal-project-title">{project.title}</h2>
 
         {/* Render Image or Video */}
-        <div style={{
-          position: 'relative',
-          width: '100%',
-          maxHeight: '65vh',
-          display: 'flex',
-          justifyContent: 'center',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: '0 20px 50px rgba(0, 210, 255, 0.15)',
-          border: '1px solid rgba(255, 255, 255, 0.1)'
-        }}>
+        <div className="modal-media-container">
           {project.type === 'image' ? (
             <img 
               src={project.url} 
               alt={project.title} 
-              style={{
-                maxWidth: '100%',
-                maxHeight: '65vh',
-                objectFit: 'contain'
-              }} 
+              className="modal-media-img"
             />
           ) : (
             <video 
               src={project.url} 
               controls 
               autoPlay 
-              style={{
-                width: '100%',
-                maxHeight: '65vh',
-                backgroundColor: '#000000'
-              }} 
+              className="modal-media-video"
             />
           )}
         </div>
 
-        <p style={{
-          maxWidth: '650px',
-          fontSize: '1.1rem',
-          lineHeight: '1.6',
-          color: '#9ca3af',
-          margin: 0
-        }}>{project.desc}</p>
+        <p className="modal-project-desc">{project.desc}</p>
       </div>
     </div>
   );
@@ -159,6 +86,8 @@ function App() {
 
       scrollState.progress = progress;
 
+      const isMobile = window.innerWidth < 768;
+
       // Map progress to water blue environments:
       // Hero: 0% - 25% (Vibrant turquoise blue)
       // Graphic Design: 25% - 50% (Clear tropical water blue)
@@ -171,7 +100,7 @@ function App() {
         scrollState.sections.videoEditing = 0;
         scrollState.sections.contact = 0;
 
-        scrollState.camera.position = [0, 0, 8];
+        scrollState.camera.position = [0, 0, isMobile ? 11.5 : 8];
         scrollState.camera.lookAt = [0, 0, 0];
         scrollState.camera.fov = 60;
 
@@ -189,7 +118,7 @@ function App() {
         scrollState.sections.videoEditing = 0;
         scrollState.sections.contact = 0;
 
-        scrollState.camera.position = [0, -0.4, 6.5];
+        scrollState.camera.position = [0, -0.4, isMobile ? 9.5 : 6.5];
         scrollState.camera.lookAt = [0, 0.4, 0];
         scrollState.camera.fov = 60;
 
@@ -207,7 +136,7 @@ function App() {
         scrollState.sections.videoEditing = localProgress;
         scrollState.sections.contact = 0;
 
-        scrollState.camera.position = [0, -6.0, 7.5];
+        scrollState.camera.position = [0, -6.0, isMobile ? 10.5 : 7.5];
         scrollState.camera.lookAt = [0, -6.0, 0];
         scrollState.camera.fov = 55;
 
@@ -225,7 +154,7 @@ function App() {
         scrollState.sections.videoEditing = 1;
         scrollState.sections.contact = localProgress;
 
-        scrollState.camera.position = [0, -12.0, 6.5];
+        scrollState.camera.position = [0, -12.0, isMobile ? 9.5 : 6.5];
         scrollState.camera.lookAt = [0, -12.0, 0];
         scrollState.camera.fov = 60;
 

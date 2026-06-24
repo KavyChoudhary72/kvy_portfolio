@@ -487,8 +487,35 @@ textarea.form-input {
   }
 }
 
-/* Project Modal Animations & Hover Styles */
+/* Project Modal Animations, Hover & Structure Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(2, 4, 12, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  cursor: pointer;
+}
+
 .close-modal-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 2.5rem;
+  cursor: pointer;
+  z-index: 10001;
   transition: all 0.3s ease !important;
 }
 
@@ -499,7 +526,64 @@ textarea.form-input {
 }
 
 .modal-content-card {
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  cursor: default;
+  text-align: center;
   animation: modalScaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-project-tag {
+  font-family: var(--font-cinematic);
+  font-size: 0.8rem;
+  color: var(--color-accent-blue);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.modal-project-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0;
+  color: #ffffff;
+}
+
+.modal-media-container {
+  position: relative;
+  width: 100%;
+  max-height: 65vh;
+  display: flex;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 210, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-media-img {
+  max-width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+}
+
+.modal-media-video {
+  width: 100%;
+  max-height: 65vh;
+  background-color: #000000;
+}
+
+.modal-project-desc {
+  max-width: 650px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin: 0;
 }
 
 @keyframes modalScaleIn {
@@ -690,5 +774,113 @@ textarea.form-input {
     transform: rotate(360deg);
   }
 }
+
+/* ==========================================================================
+   Mobile & Tablet Responsive Optimizations (Lightning Fast & Fully Aligned)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Hero Section Alignment */
+  .hero-section {
+    padding: 15vh 6vw 8vh 6vw !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .hero-container {
+    flex-direction: column-reverse !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3.5rem !important;
+  }
+
+  .hero-title {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .hero-desc {
+    margin: 0 auto 2rem auto !important;
+  }
+
+  /* Scale down HUD Profile Container to fit mobile viewports */
+  .hero-profile-container {
+    width: 220px !important;
+    height: 260px !important;
+  }
+
+  /* Grid Layouts to 1 Column */
+  .gd-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    padding: 0 1rem !important;
+  }
+
+  /* Video Layout Stacked Vertically */
+  .vd-container {
+    gap: 2.5rem !important;
+    padding: 0 1rem !important;
+  }
+
+  .vd-item, .vd-item:nth-child(even) {
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+
+  /* Contact and Philosophy Stacked */
+  .contact-layout {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    padding: 0 1rem !important;
+  }
+
+  /* Project Modal Mobile Styles */
+  .modal-backdrop {
+    padding: 1rem;
+  }
+  
+  .close-modal-btn {
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+  }
+
+  .modal-project-title {
+    font-size: 1.6rem;
+  }
+
+  .modal-media-container {
+    max-height: 50vh;
+  }
+
+  .modal-media-img, .modal-media-video {
+    max-height: 50vh;
+  }
+
+  .modal-project-desc {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    padding: 0 0.5rem;
+  }
+  
+  .modal-content-card {
+    gap: 1rem;
+  }
+
+  /* Generic Spacing reductions for mobile */
+  .scroll-section {
+    min-height: 100vh !important; /* Slightly lower scroll height to keep scrolling responsive on mobile */
+    padding: 12vh 4vw !important;
+  }
+
+  .glass-panel {
+    padding: 1.5rem !important; /* Increase space for contents by narrowing card margins */
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem !important;
+  }
+}
+
 
 
