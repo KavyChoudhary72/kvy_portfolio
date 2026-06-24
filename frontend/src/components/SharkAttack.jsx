@@ -1,21 +1,50 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, useAnimations, useVideoTexture } from '@react-three/drei';
+import { useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three';
 import { scrollState } from '../utils/scrollState';
 
 // Video Screen viewport component using Kavy's real video edits
 function VideoScreen({ url, position, rotation, scale = [1, 1, 1] }) {
   const meshRef = useRef();
-  
-  // Load texture
-  const videoTexture = useVideoTexture(url, {
-    unsynchronized: true,
-    muted: true,
-    loop: true,
-    autoplay: true,
-    start: true
-  });
+  const [texture, setTexture] = useState(null);
+
+  useEffect(() => {
+    const video = document.createElement('video');
+    video.src = url;
+    video.crossOrigin = 'anonymous';
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    
+    // Fallback URL if local video is missing (returns 404)
+    const handleError = () => {
+      console.warn(`Failed to load video: ${url}. Swapping to lightweight CDN fallback.`);
+      video.src = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+      video.play().catch(err => console.warn("Fallback video play interrupted:", err));
+    };
+
+    video.addEventListener('error', handleError);
+
+    // Create the video texture
+    const videoTexture = new THREE.VideoTexture(video);
+    videoTexture.colorSpace = THREE.SRGBColorSpace;
+    setTexture(videoTexture);
+
+    // Play video
+    video.play().catch(err => {
+      console.warn("Video auto-play failed, triggering fallback check:", err);
+      handleError();
+    });
+
+    return () => {
+      video.removeEventListener('error', handleError);
+      video.pause();
+      video.src = '';
+      video.load();
+      videoTexture.dispose();
+    };
+  }, [url]);
 
   useFrame(() => {
     const globalProgress = scrollState.progress;
@@ -37,11 +66,15 @@ function VideoScreen({ url, position, rotation, scale = [1, 1, 1] }) {
   return (
     <mesh ref={meshRef} position={position} rotation={rotation}>
       <planeGeometry args={[2.4, 1.35]} /> {/* 16:9 ratio */}
-      <meshBasicMaterial 
-        map={videoTexture} 
-        side={THREE.DoubleSide}
-        toneMapped={false}
-      />
+      {texture ? (
+        <meshBasicMaterial 
+          map={texture} 
+          side={THREE.DoubleSide}
+          toneMapped={false}
+        />
+      ) : (
+        <meshBasicMaterial color="#002b3d" side={THREE.DoubleSide} />
+      )}
       {/* Sleek metallic border frame */}
       <mesh position={[0, 0, -0.01]}>
         <planeGeometry args={[2.45, 1.4]} />
@@ -146,6 +179,7 @@ export default function SharkAttack() {
   const blackScreenRef = useRef();
   const screensGroupRef = useRef();
   const lasersGroupRef = useRef();
+  const [loadVideos, setLoadVideos] = useState(false);
 
   useFrame((state) => {
     const globalProgress = scrollState.progress;
@@ -158,6 +192,11 @@ export default function SharkAttack() {
     if (globalProgress < 0.48 || globalProgress >= 0.73) return; // Optimize!
 
     const progress = scrollState.sections.videoEditing;
+
+    // Lazy load the video elements when user scrolls close to Section 2 (which starts at 0.5)
+    if (!loadVideos && globalProgress > 0.35) {
+      setLoadVideos(true);
+    }
 
     // Dynamic black clip cut overlay
     // When progress > 0.88, the shark has swallowed the camera.
@@ -221,27 +260,31 @@ export default function SharkAttack() {
 
       {/* Floating Anamorphic Editing Showreel Screens */}
       <group ref={screensGroupRef}>
-        {/* Left Screen - plays video P5 */}
-        <VideoScreen 
-          url="/assets/videos/P5.mp4" 
-          position={screenLeftPos} 
-          rotation={[0, 0.4, 0]} 
-          scale={screenScale}
-        />
-        {/* Right Screen - plays video p6 */}
-        <VideoScreen 
-          url="/assets/videos/p6.mp4" 
-          position={screenRightPos} 
-          rotation={[0, -0.4, 0]} 
-          scale={screenScale}
-        />
-        {/* Top Center Screen - plays video p7 */}
-        <VideoScreen 
-          url="/assets/videos/p7.mp4" 
-          position={screenCenterPos} 
-          rotation={[0.15, 0, 0]} 
-          scale={screenScale}
-        />
+        {loadVideos && (
+          <>
+            {/* Left Screen - plays video P5 */}
+            <VideoScreen 
+              url="/assets/videos/P5.mp4" 
+              position={screenLeftPos} 
+              rotation={[0, 0.4, 0]} 
+              scale={screenScale}
+            />
+            {/* Right Screen - plays video p6 */}
+            <VideoScreen 
+              url="/assets/videos/p6.mp4" 
+              position={screenRightPos} 
+              rotation={[0, -0.4, 0]} 
+              scale={screenScale}
+            />
+            {/* Top Center Screen - plays video p7 */}
+            <VideoScreen 
+              url="/assets/videos/p7.mp4" 
+              position={screenCenterPos} 
+              rotation={[0.15, 0, 0]} 
+              scale={screenScale}
+            />
+          </>
+        )}
       </group>
 
       {/* Animated 3D Shark */}
