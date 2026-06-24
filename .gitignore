@@ -1,0 +1,35 @@
+# Dependencies
+**/node_modules/
+node_modules/
+
+# Production builds
+**/dist/
+dist/
+
+# Local env files
+**/.env
+.env
+.env.local
+
+# Editor directories
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Vite caching
+.vite/
+.vite-cache/
+
+# Large Video Files (exceeding Git limits)
+*.mp4
+*.webm
+*.mov
+**/assets/videos/

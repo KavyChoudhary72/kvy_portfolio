@@ -1,0 +1,14 @@
+{
+  "name": "kv-portfolio-monorepo",
+  "version": "1.0.0",
+  "description": "Fullstack monorepo for Kavy Choudhary Portfolio (Vite + React frontend & Express backend)",
+  "scripts": {
+    "install-all": "npm install --prefix frontend && npm install --prefix backend && npm install",
+    "build": "npm run build --prefix frontend",
+    "start": "node backend/server.js",
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"node backend/server.js\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
