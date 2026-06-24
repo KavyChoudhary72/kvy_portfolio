@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { scrollState } from '../utils/scrollState';
 
 // Video Screen viewport component using Kavy's real video edits
-function VideoScreen({ url, position, rotation }) {
+function VideoScreen({ url, position, rotation, scale = [1, 1, 1] }) {
   const meshRef = useRef();
   
   // Load texture
@@ -29,7 +29,7 @@ function VideoScreen({ url, position, rotation }) {
       if (progress > 0.8) {
         meshRef.current.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1);
       } else {
-        meshRef.current.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
+        meshRef.current.scale.lerp(new THREE.Vector3(...scale), 0.1);
       }
     }
   });
@@ -55,6 +55,7 @@ function VideoScreen({ url, position, rotation }) {
 function Shark() {
   const groupRef = useRef();
   const bitePlayedRef = useRef(false);
+  const { camera } = useThree();
   
   // Load the 3D shark model
   const { scene, animations } = useGLTF('/assets/models/shark.glb');
@@ -78,10 +79,10 @@ function Shark() {
     const progress = scrollState.sections.videoEditing;
     
     // Aggressive swim math
-    // Shark swims from deep z = -16 towards the camera z = 7.5
-    // At z = 7.7, its mouth completely engulfs the camera.
+    // Shark swims from deep z = -16 towards the camera
+    // Its mouth completely engulfs the camera at endZ.
     const startZ = -16;
-    const endZ = 7.7;
+    const endZ = camera.position.z + 0.35; // Dynamically adapts to the camera's actual Z position!
     const currentZ = THREE.MathUtils.lerp(startZ, endZ, progress);
     
     // A slight sinusoidal horizontal swing to simulate fish tail-wagging swimming motion
@@ -204,9 +205,13 @@ export default function SharkAttack() {
     }
   });
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const xMultiplier = isMobile ? 0.5 : 1.0;
+  const screenScale = isMobile ? [0.75, 0.75, 0.75] : [1, 1, 1];
+
   // Position relative to y = -6 (Abyssal level)
-  const screenLeftPos = [-3.2, -5.8, -3];
-  const screenRightPos = [3.2, -5.8, -3];
+  const screenLeftPos = [-3.2 * xMultiplier, -5.8, -3];
+  const screenRightPos = [3.2 * xMultiplier, -5.8, -3];
   const screenCenterPos = [0, -4.2, -8];
 
   return (
@@ -221,18 +226,21 @@ export default function SharkAttack() {
           url="/assets/videos/P5.mp4" 
           position={screenLeftPos} 
           rotation={[0, 0.4, 0]} 
+          scale={screenScale}
         />
         {/* Right Screen - plays video p6 */}
         <VideoScreen 
           url="/assets/videos/p6.mp4" 
           position={screenRightPos} 
           rotation={[0, -0.4, 0]} 
+          scale={screenScale}
         />
         {/* Top Center Screen - plays video p7 */}
         <VideoScreen 
           url="/assets/videos/p7.mp4" 
           position={screenCenterPos} 
           rotation={[0.15, 0, 0]} 
+          scale={screenScale}
         />
       </group>
 
